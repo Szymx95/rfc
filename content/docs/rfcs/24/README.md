@@ -13,14 +13,14 @@ This spec is a proposition for a voting protocol over Waku V2.
 
 In open p2p protocol there is an issue with voting off-chain as there is much room for malicious peers to only include votes that support their case when submitting votes to chain.
 
-Proposed solution is to agregate votes over waku and allow users to submit votes to smart contract that aren't already submitted.
+Proposed solution is to aggregate votes over waku and allow users to submit votes to smart contract that aren't already submitted.
 
 # Smart contract
 
-Voting should be finalized on chain so that the finished vote is immutable. 
-Becouse of that, smart contract needs to be deployed. 
+Voting should be finalized on chain so that the finished vote is immutable.
+Because of that, smart contract needs to be deployed.
 When votes are submitted smart contract has to verify what votes are properly signed and that sender has correct amount of SNT.
-When Vote is verified the amount of SNT voted on specific room by specific sender is saved on chain.
+When Vote is verified the amount of SNT voted on specific topic by specific sender is saved on chain.
 
 ## Double voting
 
@@ -29,10 +29,10 @@ Another possibility is to allow each sender to only vote once.
 
 ## Initializing Vote
 
-When someone wants to initialize vote he has to send a transaction to smart contract that will create a new voting room.
-When initializing a user has to specify type of vote (Addition, Deletion),amount of his initial SNT to submit and public key of community under vote.
-Smart contract will return a ID which is identifier of voting room.
-Also there will be function on Smart Contract that when given community public key it will return voting room ID or undefined if community isn't under vote.
+When someone wants to initialize vote he has to send a transaction to smart contract that will create a new voting session.
+When initializing a user has to specify type of vote (Addition, Deletion), amount of his initial SNT to submit and public key of community under vote.
+Smart contract will return a ID which is identifier of voting session.
+Also there will be function on Smart Contract that when given community public key it will return voting session ID or undefined if community isn't under vote.
 
 # Voting
 
@@ -40,27 +40,27 @@ Also there will be function on Smart Contract that when given community public k
 
 Sending votes is simple every peer is able to send a message to Waku topic specific to given application: 
 ```
-/status-community-directory-curation-vote/1/{voting-room-id}/proto
+/status-community-directory-curation-vote/1/{voting-session-id}/json
 ```
 
 vote object that is sent over waku should contain information about: 
 
 ```ts
-{
-    sender: String // address of the sender
-    vote: String // vote sent eg. 'yes' 'no'
+type Vote = {
+    sender: string // address of the sender
+    vote: string // vote sent eg. 'yes' 'no'
     sntAmount: BigNumber //number of snt cast on vote
-    sign: String // cryptographic signature of a transaction (signed fields: sender,vote,sntAmount,nonce,roomID)
-    nonce: Number // number of votes cast from this address on current vote (only if we allow multiple votes from the same sender)
-    roomId: Number // ID of voting room
+    sign: string // cryptographic signature of a transaction (signed fields: sender,vote,sntAmount,nonce,sessionID)
+    nonce: number // number of votes cast from this address on current vote (only if we allow multiple votes from the same sender)
+    sessionID: number // ID of voting session
 }
 ```
 
 ## Aggregating votes
 
-Every peer that is opening specific voting room will listen to votes sent over p2p network, and aggregate them for a single transaction to chain.
+Every peer that is opening specific voting session will listen to votes sent over p2p network, and aggregate them for a single transaction to chain.
 
-## Submiting to chain
+## Submitting to chain
 
 Every peer that has aggregated at least one vote will be able to send them to smart contract.
 When someone votes he will aggregate his own vote and will be able to immediately send it.
