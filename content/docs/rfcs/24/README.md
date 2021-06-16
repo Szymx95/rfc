@@ -3,7 +3,7 @@ slug: 24
 title: 24/STATUS-CURATION
 name: Status Community Directory Curation Voting using Waku v2
 status: raw
-category: application
+tags: waku-application
 editor: Szymon Szlachtowicz <szymon.s@ethworks.io>
 ---
 
@@ -73,3 +73,8 @@ Smart contract needs to verify that all votes are valid (eg. all senders had eno
 
 Once the vote deadline has expired, the smart contract will not accept votes anymore.
 Also directory will be updated according to vote results (community added to directory, removed etc.)
+
+# Copyright
+
+Copyright and related rights waived via
+[CC0](https://creativecommons.org/publicdomain/zero/1.0/).
